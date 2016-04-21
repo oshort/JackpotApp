@@ -12,8 +12,6 @@
     NSMutableArray *picks;
 }
 
-
-
 @end
 
 
@@ -31,7 +29,6 @@
 }
 
 + (instancetype) ticketUsingQuickPick{//a class method has no instance itself. you can't rely on an instance variable already existing
-    
     
     Ticket *aTicket = [[Ticket alloc]init];
     
@@ -76,15 +73,21 @@
         }
     }
     if (!dontAdd) {
-        [picks addObject:pickNumber]; //adding the number to the picks array
+        [picks addObject:pickNumber];
+        
+
+        //adding the number to the picks array
     }
+    
 }
 
 -(NSArray*)picks{
     return [picks copy];
     
+    
 //      instance variable is different than the return type. in this case we are returning an array outside people cannot change           as opposed to a mutable array we can change
 }
+
 
 //      creating a method to check our ticket
 
@@ -131,7 +134,8 @@
             break;
             
         default:
-            self.payout  = @"Sorry please play again";
+            self.winner = NO;
+            self.payout  = @"Sorry, please play again";
             break;
     }
 }

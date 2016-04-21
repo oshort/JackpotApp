@@ -11,9 +11,11 @@
 
 @interface TicketsTableViewController (){
 NSMutableArray *tickets;
+    int totalWinnings, totalSpent;
 }
 
 - (IBAction)createTicket:(id)sender;
+- (IBAction)checkWinners:(id)sender;
 
 
 @end
@@ -30,6 +32,9 @@ NSMutableArray *tickets;
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     tickets= [[NSMutableArray alloc]init];
+    totalWinnings = 0;
+    totalSpent = 0;
+    self.title = @"Money Won! = $0 Money Spent = $0";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -56,8 +61,13 @@ NSMutableArray *tickets;
     
     Ticket * aTicket = tickets[indexPath.row];
     cell.textLabel.text = [aTicket description];
-    
     cell.detailTextLabel.text = aTicket.payout;
+    
+    if (aTicket.winner == YES){
+        cell.detailTextLabel.textColor = [UIColor greenColor];
+    }else{
+        cell.detailTextLabel.textColor = [UIColor redColor];
+    }
     
     return cell;
 }
@@ -107,11 +117,27 @@ NSMutableArray *tickets;
 }
 */
 
+//Press + Button to Add Ticket
+
 - (IBAction)createTicket:(id)sender{
     Ticket *aTicket = [Ticket ticketUsingQuickPick];
     [tickets addObject:aTicket];
+    
+    totalSpent += aTicket.ticketPrice;
+    self.title = [NSString stringWithFormat:@"Money Won! = $%d Money Spent = $%d", totalWinnings, totalSpent];
+    
     [self.tableView reloadData];
 
+}
+
+//Press Check Winners Button to generate a winning ticket, and compare our QuickPick to the results
+
+-(IBAction)checkWinners:(id)sender{
+    Ticket *winningTicket = [Ticket ticketUsingQuickPick];
+    for(Ticket *myTicket in tickets){
+        [myTicket compareWithTicket:winningTicket];
+    }
+     [self.tableView reloadData];
 }
 
 @end
